@@ -15,11 +15,17 @@ var channel = connection.CreateModel();
 
 channel.QueueDeclare("hello-queue", true, false, false);
 
-string message = "Hello World!!";
+Enumerable.Range(1, 50).ToList().ForEach(x =>
+{
 
-var messageBody = Encoding.UTF8.GetBytes(message);
+    string message = $"Message {x}";
+
+    var messageBody = Encoding.UTF8.GetBytes(message);
 
 
-channel.BasicPublish(string.Empty, "hello-queue", null, messageBody); // kuyrukraki isim verilmeli!!!!!!
+    channel.BasicPublish(string.Empty, "hello-queue", null, messageBody); // kuyrukraki isim verilmeli!!!!!!
 
-Console.WriteLine("Mesaj gönderildi");
+    Console.WriteLine($"Mesaj gönderilmiştir : {message}");
+});
+
+
