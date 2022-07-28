@@ -18,10 +18,17 @@ var channel = connection.CreateModel();
 
 channel.BasicQos(0, 1,false);
 //channel.QueueDeclare("hello-queue", true, false, false);
+//channel.ExchangeDeclare("logs-fanout", durable: true, type: ExchangeType.Fanout);
+var randomQueueName = channel.QueueDeclare().QueueName;
 
+channel.QueueBind(randomQueueName,"logs-fanout","",null);
+
+
+//channel.QueueDeclare(randomQueueName, true, false, false); //fanout kalıcı hale getirme
 var consumer = new EventingBasicConsumer(channel);
+Console.WriteLine("loglar dinleniyor...");
+channel.BasicConsume(randomQueueName, false, consumer);
 
-channel.BasicConsume("hello-queue",false,consumer);
 
 consumer.Received += (sender, args) =>
 {
