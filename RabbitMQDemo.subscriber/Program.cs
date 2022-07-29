@@ -17,17 +17,17 @@ var channel = connection.CreateModel();
 
 
 channel.BasicQos(0, 1,false);
-//channel.QueueDeclare("hello-queue", true, false, false);
-//channel.ExchangeDeclare("logs-fanout", durable: true, type: ExchangeType.Fanout);
-var randomQueueName = channel.QueueDeclare().QueueName;
-
-channel.QueueBind(randomQueueName,"logs-fanout","",null);
 
 
-//channel.QueueDeclare(randomQueueName, true, false, false); //fanout kalıcı hale getirme
+
+var queueName= "direct-queue-Critical";
+
+
+
+
 var consumer = new EventingBasicConsumer(channel);
 Console.WriteLine("loglar dinleniyor...");
-channel.BasicConsume(randomQueueName, false, consumer);
+channel.BasicConsume(queueName, false, consumer);
 
 
 consumer.Received += (sender, args) =>
@@ -36,7 +36,10 @@ consumer.Received += (sender, args) =>
     Thread.Sleep(1500);
     Console.WriteLine("Gelen Mesaj:" + message);
 
-    channel.BasicAck(args.DeliveryTag,false);
+   // File.AppendAllText("log-crytical.txt",message+"\n", Encoding.UTF8); // dosyaya yazdırır
+
+
+    channel.BasicAck(args.DeliveryTag,false); //doğrulama ,ç,n
 };
 
 Console.ReadLine(); 

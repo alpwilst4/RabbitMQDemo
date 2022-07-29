@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQDemo.subscriber", "
 		{9B3ACA05-4610-4BD7-A05D-9DC3EFB7A233} = {9B3ACA05-4610-4BD7-A05D-9DC3EFB7A233}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enums", "Enums\Enums.csproj", "{9B3ACA05-4610-4BD7-A05D-9DC3EFB7A233}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enums", "Enums\Enums.csproj", "{9B3ACA05-4610-4BD7-A05D-9DC3EFB7A233}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Enumms", "Enumms", "{1237F128-846D-4913-9874-CD5F0AD231F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9B3ACA05-4610-4BD7-A05D-9DC3EFB7A233} = {1237F128-846D-4913-9874-CD5F0AD231F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E53A8BF7-CEFF-455B-A231-00CD7539EF2E}
