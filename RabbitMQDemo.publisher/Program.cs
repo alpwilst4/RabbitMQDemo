@@ -5,6 +5,8 @@ using System.Text;
 
 
 
+
+
 var factory = new ConnectionFactory();
 factory.Uri = new Uri("amqps://fefpicsr:hi8rgpne3tFVJKaHs0hftBCnIx3mNfzh@cow.rmq2.cloudamqp.com/fefpicsr");
 
@@ -13,7 +15,9 @@ using var connection = factory.CreateConnection();
 
 var channel = connection.CreateModel();
 
-channel.ExchangeDeclare("logs-fanout",durable: true,type:ExchangeType.Fanout);
+channel.ExchangeDeclare("logs-direct",durable: true,type:ExchangeType.Direct);
+
+
 
 
 Enumerable.Range(1, 50).ToList().ForEach(x =>
