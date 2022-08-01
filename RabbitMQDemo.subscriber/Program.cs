@@ -18,10 +18,11 @@ var channel = connection.CreateModel();
 
 channel.BasicQos(0, 1,false);
 
-
-
-var queueName= "direct-queue-Critical";
-
+var queueName= channel.QueueDeclare().QueueName;
+var routeKey = "*.Error.*";
+//var routeKey = "*.*.Warning";
+//var routeKey = "Info.#";
+channel.QueueBind(queueName, "logs-topic",routeKey);
 
 
 
@@ -30,16 +31,18 @@ Console.WriteLine("loglar dinleniyor...");
 channel.BasicConsume(queueName, false, consumer);
 
 
-consumer.Received += (sender, args) =>
-{
-    var message = Encoding.UTF8.GetString(args.Body.ToArray());
-    Thread.Sleep(1500);
-    Console.WriteLine("Gelen Mesaj:" + message);
 
-   // File.AppendAllText("log-crytical.txt",message+"\n", Encoding.UTF8); // dosyaya yazdırır
+    consumer.Received += (sender, args) =>
+    {
+        var message = Encoding.UTF8.GetString(args.Body.ToArray());
+        Thread.Sleep(1500);
+        Console.WriteLine("Gelen Mesaj:" + message);
+
+        File.AppendAllText("log-crytical.txt", message + "\n", Encoding.UTF8);
 
 
-    channel.BasicAck(args.DeliveryTag,false); //doğrulama ,ç,n
-};
+        channel.BasicAck(args.DeliveryTag, false);
+    };
+
 
 Console.ReadLine(); 
