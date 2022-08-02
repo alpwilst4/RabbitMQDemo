@@ -15,36 +15,21 @@ using var connection = factory.CreateConnection();
 
 var channel = connection.CreateModel();
 
-channel.ExchangeDeclare("logs-topic",durable: true,type:ExchangeType.Topic);
+channel.ExchangeDeclare("header-exchange",durable: true,type:ExchangeType.Headers);
 
-Enum.GetNames(typeof(LogNames)).ToList().ForEach(x => {
-   
-  
+Dictionary<string, object> headers = new Dictionary<string, object>();
 
-});
+headers.Add("format", "pdf");
+headers.Add("shape", "a4");
 
-Random rnd = new Random();
-Enumerable.Range(1, 50).ToList().ForEach(x =>
-{
-    LogNames log = (LogNames)new Random().Next(1, 5);
+var properties = channel.CreateBasicProperties();
+properties.Headers = headers;
 
-
-   
-
-    LogNames log1 = (LogNames)rnd.Next(1, 5);
-    LogNames log2 = (LogNames)rnd.Next(1, 5);
-    LogNames log3 = (LogNames)rnd.Next(1, 5);
+channel.BasicPublish("header-exchange", String.Empty, properties, Encoding.UTF8.GetBytes("header mesajım"));
 
 
-    string message = $"log-type {log1}-{log2}-{log3}";
-    var routeKey = $"{log1}.{log2}.{log3}";
-    var messageBody = Encoding.UTF8.GetBytes(message);
+Console.WriteLine("mesaj gönderilmiştir");
 
-
-
-    channel.BasicPublish("logs-topic",routeKey, null, messageBody);
-
-    Console.WriteLine($"Mesaj gönderilmiştir : {message}");
-});
+Console.ReadLine();
 
 
