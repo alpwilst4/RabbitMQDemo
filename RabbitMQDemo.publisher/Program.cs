@@ -3,10 +3,6 @@ using RabbitMQ.Client;
 using System.Text;
 
 
-
-
-
-
 var factory = new ConnectionFactory();
 factory.Uri = new Uri("amqps://fefpicsr:hi8rgpne3tFVJKaHs0hftBCnIx3mNfzh@cow.rmq2.cloudamqp.com/fefpicsr");
 
