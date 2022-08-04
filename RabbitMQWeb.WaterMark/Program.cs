@@ -13,7 +13,7 @@ builder.Services.AddSingleton(sp => new ConnectionFactory()
 });
 
 builder.Services.AddSingleton< RabbitMQClientService > ();
-
+builder.Services.AddSingleton<RabbitMQPublisher>();
 builder.Services.AddDbContext<AppDbContext>(options => 
 {
     options.UseInMemoryDatabase(databaseName: "productDb");
