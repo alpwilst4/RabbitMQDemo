@@ -68,7 +68,7 @@ namespace RabbitMQWeb.WaterMark.Controllers
             if (ImageFile is { Length:>0} )
             {
                 var RandomImage = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images",RandomImage);
                 await using FileStream fileStream = new(path, FileMode.Create);
                 await ImageFile.CopyToAsync(fileStream);
 
@@ -78,7 +78,7 @@ namespace RabbitMQWeb.WaterMark.Controllers
                   
                 });
                 product.ImageName = RandomImage;
-
+               
             }
             return View(product);
         }
