@@ -6,18 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQWeb.WaterMark.Models;
+using RabbitMQWeb.WaterMark.Services;
 
 namespace RabbitMQWeb.WaterMark.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly RabbitMQPublisher _rabbitMQPublisher;
 
-        public ProductsController(AppDbContext context)
+        public ProductsController(AppDbContext context ,RabbitMQPublisher rabbitMQPublisher)
         {
             _context = context;
+            _rabbitMQPublisher = rabbitMQPublisher;
         }
 
+      
         // GET: Products
         public async Task<IActionResult> Index()
         {
@@ -52,16 +56,29 @@ namespace RabbitMQWeb.WaterMark.Controllers
 
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price,Stock,PictureUrl")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Price,Stock,ImageName")] Product product,IFormFile ImageFile)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(product);
+            }
+            if (ImageFile is { Length:>0} )
+            {
+                var RandomImage = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                await using FileStream fileStream = new(path, FileMode.Create);
+                await ImageFile.CopyToAsync(fileStream);
+
+                _rabbitMQPublisher.Publish(new productImageCreatedEvent()
+                {
+                    ImageName = RandomImage,
+                  
+                });
+                product.ImageName = RandomImage;
+
             }
             return View(product);
         }
@@ -84,10 +101,10 @@ namespace RabbitMQWeb.WaterMark.Controllers
 
         // POST: Products/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Stock,PictureUrl")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Stock,ImageUrl")] Product product)
         {
             if (id != product.Id)
             {
