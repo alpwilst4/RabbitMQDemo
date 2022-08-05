@@ -17,11 +17,12 @@ builder.Services.AddSingleton<RabbitMQPublisher>();
 builder.Services.AddDbContext<AppDbContext>(options => 
 {
     options.UseInMemoryDatabase(databaseName: "productDb");
+
     
 }
 
 );
-
+//////
 
 builder.Services.AddControllersWithViews();
 
