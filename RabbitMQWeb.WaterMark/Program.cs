@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
+using RabbitMQWeb.WaterMark.BackgroundServices;
 using RabbitMQWeb.WaterMark.Models;
 using RabbitMQWeb.WaterMark.Services;
 
@@ -23,8 +24,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 );
 ////////
-
+builder.Services.AddHostedService<ImageWatermarkProcessBackgroudService>();
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
